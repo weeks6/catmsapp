@@ -1,24 +1,6 @@
-# catmsapp
+# Cat Management System App
+## SPA приложение с CRUD функционалом и парок других фич
 
-## Project setup
-```
-npm install
-```
+### Тестовое задание для вакансии
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+RESTful API [здесь](https://github.com/weeks6/catms).
