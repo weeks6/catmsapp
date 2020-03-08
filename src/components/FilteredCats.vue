@@ -6,8 +6,8 @@
           <label for="gender">Пол</label>
           <md-select v-model="gender" name="gender" id="gender" md-dense>
             <md-option value="Any">Все</md-option>
-            <md-option value="Male">Мальчик</md-option>
-            <md-option value="Female">Девочка</md-option>
+            <md-option value="Мальчик">Мальчик</md-option>
+            <md-option value="Девочка">Девочка</md-option>
           </md-select>
         </md-field>
       </div>
