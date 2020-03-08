@@ -17,7 +17,7 @@
         </md-card-content>
 
         <md-card-actions v-if="editable">
-            <md-button  class="md-icon-button" @click="openDialog({type: 'editDialog', id: cat._id})"><md-icon>edit</md-icon></md-button>
+            <md-button class="md-icon-button" @click="openDialog({type: 'editDialog', id: cat._id})"><md-icon>edit</md-icon></md-button>
             <md-button class="md-icon-button md-accent" @click="() => {openDialog({type: 'deleteDialog', id: cat._id}); }"><md-icon>delete</md-icon></md-button>
         </md-card-actions>
     </md-card>

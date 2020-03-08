@@ -66,9 +66,10 @@
         </div>
         
         <md-dialog-actions>
+
             <md-button class="md-primary" @click="closeDialog({type: addDialog.active ? 'addDialog' : 'editDialog', id: null})">Отмена</md-button>
             <md-button class="md-accent" type="submit">Сохранить</md-button>
-
+            <md-progress-spinner v-if="loading" :md-diameter="30" :md-stroke="3" md-mode="indeterminate" class="md-accent"></md-progress-spinner>
         </md-dialog-actions>
     </form>
 
@@ -103,13 +104,20 @@ export default {
 
             if (!this.$v.$invalid && this.addDialog.active) {
                 // post the cat
-                this.postCat(this.mutateForm)
-                this.closeDialog({type: "addDialog", id: null})
-                this.clearForm()
+                this.loading = true
+                this.postCat(this.mutateForm).then(()=> {
+                        this.loading = false
+                        this.closeDialog({type: "addDialog", id: null})
+                        this.clearForm()
+                    }
+                )
             } else if (!this.$v.$invalid && this.editDialog.active) {
-                this.editCat({id: this.editDialog.id, editedCatObj: this.mutateForm})
-                this.closeDialog({type: "editDialog", id: null})
-                this.clearForm()
+                this.laoding = true
+                this.editCat({id: this.editDialog.id, editedCatObj: this.mutateForm}).then(() => {
+                    this.loading = false
+                    this.closeDialog({type: "editDialog", id: null})
+                    this.clearForm()
+                })
             }
         },
         clearForm() {
@@ -137,7 +145,8 @@ export default {
         breed: "",
         description: "",
         pictures: ""
-      }
+      },
+      loading: false
     }),
     watch: {
         editDialog: function() {
