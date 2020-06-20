@@ -1,12 +1,11 @@
 <template>
-<div>   
-    <div class="md-layout md-alignment-center">
-        <div class="md-layout-item md-xlarge-size-50 md-large-size-33 md-medium-size-33 md-small-size-50 md-xsmall-size-100" v-for="cat in filteredCats(filterOptions).slice(pageNumber, prevRange)" :key="cat._id">
-            <CatCard :cat="cat" :editable="editable"/>
-        </div>
-    </div>
-</div>
-
+    <v-container fluid>
+        <v-row>
+            <v-col xl="4" lg="3" md="4" sm="6" xs="12" v-for="cat in filteredCats(filterOptions).slice(pageNumber, prevRange)" :key="cat._id">
+                <CatCard :cat="cat" :editable="editable"/>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

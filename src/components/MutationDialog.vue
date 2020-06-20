@@ -67,7 +67,7 @@
         
         <md-dialog-actions>
 
-            <md-button class="md-primary" @click="closeDialog({type: addDialog.active ? 'addDialog' : 'editDialog', id: null})">Отмена</md-button>
+            <md-button class="md-primary" @click="clearDialogAndClose">Отмена</md-button>
             <md-button class="md-accent" type="submit">Сохранить</md-button>
             <md-progress-spinner v-if="loading" :md-diameter="30" :md-stroke="3" md-mode="indeterminate" class="md-accent"></md-progress-spinner>
         </md-dialog-actions>
@@ -98,6 +98,10 @@ export default {
                         'md-invalid': field.$invalid && field.$dirty
                     }
                 }
+        },
+        clearDialogAndClose () {
+            this.closeDialog({type: this.addDialog.active ? 'addDialog' : 'editDialog', id: null})
+            this.clearForm()
         },
         validateCat () {
             this.$v.$touch()

@@ -1,30 +1,37 @@
 <template>
-    <div>
-    <md-card md-with-hover>
-        <md-card-media>
-        <img src="../assets/cat.png" alt="Cat">
-        </md-card-media>
+    <v-card> 
+        <v-img
+            src="../assets/cat.png"
+            alt="Cat"
+            height="200px"
+            class="white--text align-end">
+           <v-card-title>{{ cat.name }}</v-card-title>
+        </v-img>
 
-        <md-card-header>
-            <div class="md-title">{{ cat.name }}</div>
+        <v-card-subtitle class="pb-0">
             <div class="md-subhead">{{cat.age}}, {{cat.gender}}</div>
-        </md-card-header>
+        </v-card-subtitle>
 
-        <md-card-content>
+        <v-card-text class="text--primary">>
             <div v-if="cat.color !==' '"> Цвет: {{cat.color}} </div>
             <div v-if="cat.breed !==' '"> Порода: {{cat.breed}} </div>
             <span v-if="cat.description !==' '"> {{cat.description}} </span>
-        </md-card-content>
+        </v-card-text>
 
-        <md-card-actions v-if="editable">
-            <md-button class="md-icon-button" @click="openDialog({type: 'editDialog', id: cat._id})"><md-icon>edit</md-icon></md-button>
-            <md-button class="md-icon-button md-accent" @click="() => {openDialog({type: 'deleteDialog', id: cat._id}); }"><md-icon>delete</md-icon></md-button>
-        </md-card-actions>
-    </md-card>
-    
-    </div>
-    
-</template>
+        <v-card-actions v-if="editable">
+            <v-spacer></v-spacer>
+            <v-btn icon
+                   @click="openDialog({type: 'editDialog', id: cat._id})">
+                <v-icon>edit</v-icon>
+            </v-btn>
+            <v-btn icon
+                   @click="openDialog({type: 'deleteDialog', id: cat._id})"
+                   color="red">
+                <v-icon>delete</v-icon>
+            </v-btn>
+        </v-card-actions>
+    </v-card>
+</template> 
 
 <script>
 import { mapActions } from 'vuex'

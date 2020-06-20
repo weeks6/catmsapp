@@ -34,6 +34,7 @@ const routes = [
   },
   {
     path: '/edit',
+    name: "Edit",
     component: () => import('../views/Edit.vue')
   },
   {

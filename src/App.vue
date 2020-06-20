@@ -1,26 +1,41 @@
 <template>
-    <md-app md-mode="reveal" id="app">
-      <md-app-toolbar class="md-primary">
-        <md-button class="md-icon-button">
-            <router-link class="rt-link" to="/home"><md-icon>home</md-icon></router-link>
-        </md-button>
-        <md-button class="md-icon-button">
-            <router-link class="rt-link" to="/edit"><md-icon>edit</md-icon></router-link>
-        </md-button>
-        <md-button class="md-icon-button" v-if="$route.name!=='Home'" @click="openDialog({type: 'addDialog', id: null})">
-          <md-icon>add</md-icon>
-        </md-button>
+    <v-app>
 
-        <MutationDialog />
-        <DeleteCatDialog />
+      <MutationDialog />
+      <DeleteCatDialog />
 
-      </md-app-toolbar>
+      <v-app-bar app color="primary">
+        <v-btn icon color="grey lighten-4" @click="goTo('Home')">
+          <v-icon>home</v-icon>
+        </v-btn>
+        
+        <v-btn icon color="grey lighten-4" @click="goTo('Edit')">
+          <v-icon>edit</v-icon>
+        </v-btn>
+        <v-btn icon color="grey lighten-4" v-if="$route.name == 'Edit'" @click="openDialog({type: 'addDialog', id: null})">
+          <v-icon>add</v-icon>
+        </v-btn>
 
-      <md-app-content >
-        <div class="md-layout md-alignment-center">
-          <FilteredCats class="md-layout-item md-xlarge-size-60 md-large-size-60 md-medium-size-100 md-small-size-100 md-xsmall-size-100"/>
-        </div>
-          
+        <v-menu 
+          :close-on-content-click="false"
+          :nudge-width="200"
+          offset-x>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="grey lighten-4"
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>filter_alt</v-icon>
+            </v-btn>
+          </template>
+
+          <FilteredCats/>
+        </v-menu>
+      </v-app-bar>
+
+      <v-main >
           <div class="pagenation-wrapper">
               <div v-for="num in Math.ceil(allCats[1]/10)" :key="num" class="page-link">
                   <router-link :to="`${pathRegExp.exec($route.path + '/')}` + num.toString()" class="page-link"> {{num}} </router-link>
@@ -34,9 +49,9 @@
                   <router-link :to="`${pathRegExp.exec($route.path + '/')}` + num.toString()" class="page-link"> {{num}} </router-link>
               </div>
           </div>
-      </md-app-content>
+      </v-main>
     
-    </md-app>
+    </v-app>
 </template>
 
 <script>
@@ -57,6 +72,14 @@ export default {
   }),
   methods: {
     ...mapActions(['fetchCats', 'openDialog']),
+    goTo: function (path) {
+      if (this.$route.name !== path) {
+          this.$router.replace({
+          name: path
+        })
+      }
+      
+    }
   },
   created() {
       this.fetchCats()
@@ -66,6 +89,7 @@ export default {
 </script>
 
 <style>
+
   #app {
     font-family: 'Roboto', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -101,7 +125,13 @@ export default {
   }
 
   .rt-link {
-    padding: 1rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+  }
+
+  .rt-link:hover {
+    text-decoration: none;
   }
 
 </style>

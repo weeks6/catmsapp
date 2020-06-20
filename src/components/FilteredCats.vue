@@ -1,42 +1,29 @@
 <template>
-  <div>
-    <div class="md-layout md-gutter">
-      <div class="md-layout-item">
-        <md-field>
-          <label for="gender">Пол</label>
-          <md-select v-model="gender" name="gender" id="gender" md-dense>
-            <md-option value="Any">Все</md-option>
-            <md-option value="Мальчик">Мальчик</md-option>
-            <md-option value="Девочка">Девочка</md-option>
-          </md-select>
-        </md-field>
-      </div>
+    <v-list>
+      <v-list-item>
+          <v-select
+            :items="genders"
+            v-model="gender"
+            label="Пол">
+          </v-select>
+      </v-list-item>
 
-      <div class="md-layout-item">
-        <md-field>
-          <label for="breed">Порода</label>
-          <md-select v-model="breed" name="breed" id="breed" md-dense>
-            <md-option value="Any">Все</md-option>
-            <div v-for="(breed, idx) of breedArray" :key="idx">
-              <md-option :value="breed">{{breed}}</md-option>
-            </div>
-          </md-select>
-        </md-field>
-      </div>
+      <v-list-item>
+          <v-select
+            v-model="breed"
+            :items ="breeds"
+            label="Порода">
+          </v-select>
+      </v-list-item>
 
-      <div class="md-layout-item">
-        <md-field>
-          <label for="color">Цвет</label>
-          <md-select v-model="color" name="color" id="color" md-dense>
-            <md-option value="Any">Все</md-option>
-            <div v-for="(color, idx) of colorArray" :key="idx">
-              <md-option :value="color">{{color}}</md-option>
-            </div>
-          </md-select>
-        </md-field>
-      </div>
-    </div>
-  </div>
+      <v-list-item>
+        <v-select
+          v-model="color"
+          :items="colors"
+          label="Окрас">
+        </v-select>
+      </v-list-item>
+  </v-list>
 </template>
 
 <script>
@@ -47,15 +34,13 @@ export default {
     data: function() {
       return {
         filterOptions: {
-          gender: "Any",
-          breed: "Any",
-          color: "Any"
+          gender: "Все",
+          breed: "Все",
+          color: "Все"
         },
-        gender: "Any",
-        breed: "Any",
-        color: "Any",
-        breedArray: [],
-        colorArray: []
+        gender: "Все",
+        breed: "Все",
+        color: "Все",
       }
     },
     computed: {
@@ -76,16 +61,6 @@ export default {
       color: function() {
         this.filterOptions.color = this.color
         this.setFilterOptions(this.filterOptions)
-      },
-      breeds: function() {
-        if (this.breeds) {
-          this.breedArray = this.breeds
-        }
-      },
-      colors: function() {
-        if (this.colors) {
-          this.colorArray = this.colors
-        }
       }
     }
 }
