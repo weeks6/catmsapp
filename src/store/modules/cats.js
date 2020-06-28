@@ -1,7 +1,8 @@
-// import axios from 'axios'
+import axios from 'axios'
+
+const LOCALHOST_IP = "http://192.168.1.5:3000"
 
 const state = {
-    // mockup cats for the ability to click through the app without backend
     cats: [],
 
     filterOptions: {
@@ -14,8 +15,8 @@ const state = {
 const getters = {
     allCats: state => [state.cats, state.cats.length],
     oneCat: state => id => state.cats.find(cat => cat._id === id),
-    breeds: state => ['Все', ...new Set(state.cats.map(cat => cat.breed).filter(breed => breed != " "))],
-    colors: state => ['Все', ...new Set(state.cats.map(cat => cat.color).filter(color => color != " "))],
+    breeds: state => ['Все', ...new Set(state.cats.map(cat => cat.breed).filter(breed => breed != ""))],
+    colors: state => ['Все', ...new Set(state.cats.map(cat => cat.color).filter(color => color != ""))],
     genders: () => ['Все', 'Мальчик', 'Девочка'],
     filteredCats: state => filterOptions => state.cats.filter(cat => {
         if ((filterOptions.gender == cat.gender || filterOptions.gender == "Все") &&
@@ -29,54 +30,52 @@ const getters = {
 
 const actions = {
     async fetchCats({ commit }) {
-        // const response = await axios.get("http://192.168.1.3:3000/api/cats")
-
-        const mockCats = [
-            {_id: 1, name: "bruh", gender:"Мальчик", breed:"breed1", color: "color1"},
-            {_id: 2, name: "bruh2", gender:"Мальчик", breed:"breed2", color: "color3"},
-            {_id: 3, name: "bruh3", gender:"Мальчик", breed:"breed1", color: "color1"},
-            {_id: 4, name: "bruh4", gender:"Мальчик", breed:"blah blah blah", color: "color2"},
-            {_id: 5, name: "bruh5", gender:"Девочка", breed:"blah blah blah", color: "color2"},
-        ]
-
-        // commit('setCats', response.data)
-        commit('setCats', mockCats)
+        const response = await axios.get(`${LOCALHOST_IP}/api/cats`)
+        commit('setCats', response.data)
     },
 
     async postCat({commit}, catObj) {
-        // const postedCat = await axios.post("http://192.168.1.3:3000/api/newcat/", {
-        //     name: catObj.name,
-        //     breed: catObj.breed,
-        //     color: catObj.color,
-        //     gender: catObj.gender,
-        //     age: catObj.age,
-        //     description: catObj.description,
-        //     pictures: catObj.pictures
-        // })
-        catObj._id = state.cats.length+1
-        commit('addCat', catObj)
+        try {
+           const postedCat = await axios.post(`${LOCALHOST_IP}/api/newcat/`, {
+                name: catObj.name,
+                breed: catObj.breed,
+                color: catObj.color,
+                gender: catObj.gender,
+                age: catObj.age,
+                description: catObj.description,
+                pictures: catObj.pictures
+            })
+            
+            commit('addCat', postedCat.data)
+        }
+        catch(e) {
+            console.log(e)
+        }
     },
 
     async deleteCat({commit}, id) {
-        // await axios.delete(`http://192.168.1.3:3000/api/deletecat/${id}`)
+        await axios.delete(`${LOCALHOST_IP}/api/deletecat/${id}`)
         commit('deleteCat', id)
     },
 
-    async editCat({commit}, {id, editedCatObj}) {
-        console.log(id)
+    async editCat({commit}, editedCatObj) {
+
+        try {
+            const editedCat = await axios.patch(`${LOCALHOST_IP}/api/editcat/${editedCatObj.id}`, {
+                name: editedCatObj.name,
+                breed: editedCatObj.breed,
+                color: editedCatObj.color,
+                gender: editedCatObj.gender,
+                age: editedCatObj.age,
+                description: editedCatObj.description,
+                pictures: editedCatObj.pictures
+            })
+            commit('editCat', editedCat.data)
+        } catch (e) {
+            console.log(e)
+        }
         
-        // const editedCat = await axios.patch(`http://192.168.1.3:3000/api/editcat/${id}`, {
-        //     name: editedCatObj.name,
-        //     breed: editedCatObj.breed,
-        //     color: editedCatObj.color,
-        //     gender: editedCatObj.gender,
-        //     age: editedCatObj.age,
-        //     description: editedCatObj.description,
-        //     pictures: editedCatObj.pictures
-        // })
-        // commit('editCat', editedCat.data)
-        editedCatObj._id = id
-        commit('editCat', editedCatObj)
+        
     },
 
     setFilterOptions({commit}, filterOptions) {

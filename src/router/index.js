@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import Page from '../components/Page'
 
 Vue.use(VueRouter)
@@ -25,20 +24,15 @@ const pageProps = (route) => {
 const routes = [
   {
     path: '/',
-    redirect: '/home/',
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home
+    redirect: '/home/:page',
   },
   {
     path: '/edit',
-    name: "Edit",
-    component: () => import('../views/Edit.vue')
+    redirect: '/edit/:page'
   },
   {
     path: '/home/:page',
+    name: 'Home',
     component: Page,
     props: pageProps
   },

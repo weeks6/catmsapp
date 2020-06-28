@@ -12,45 +12,69 @@
             <div class="md-subhead">{{cat.age}}, {{cat.gender}}</div>
         </v-card-subtitle>
 
-        <v-card-text class="text--primary">>
-            <div v-if="cat.color !==' '"> Цвет: {{cat.color}} </div>
-            <div v-if="cat.breed !==' '"> Порода: {{cat.breed}} </div>
-            <span v-if="cat.description !==' '"> {{cat.description}} </span>
+        <v-card-text class="text--primary">
+            <div v-if="cat.color"> Окрас: {{cat.color}} </div>
+            <div v-if="cat.breed"> Порода: {{cat.breed}} </div>
+            <span v-if="cat.description"> {{cat.description}} </span>
         </v-card-text>
 
         <v-card-actions v-if="editable">
             <v-spacer></v-spacer>
-            <v-btn icon
-                   @click="openDialog({type: 'editDialog', id: cat._id})">
-                <v-icon>edit</v-icon>
-            </v-btn>
-            <v-btn icon
-                   @click="openDialog({type: 'deleteDialog', id: cat._id})"
-                   color="red">
-                <v-icon>delete</v-icon>
-            </v-btn>
+
+            <v-dialog v-model="dialogEdit"
+                    max-width="600px"
+                    transition="fade-transition">
+
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn icon
+                        v-bind="attrs"
+                        v-on="on">
+                    <v-icon>edit</v-icon>
+                </v-btn>
+            </template>
+            <EditCatDialog :dialog="this.dialogEdit"
+                           @edit-dialog-close="dialogEdit=false"
+                           :cat="cat"/>
+            </v-dialog>
+            
+            <v-dialog v-model="dialogDelete"
+                    max-width="290px"
+                    persistent
+                    transition="fade-transition">
+
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn icon
+                        v-bind="attrs"
+                        v-on="on"
+                        color="red">
+                    <v-icon>delete</v-icon>
+                </v-btn>
+            </template>
+            <DeleteCatDialog :dialog="this.dialogDelete"
+                           @delete-dialog-close="dialogDelete=false"
+                           :catId="cat._id"/>
+            </v-dialog>
         </v-card-actions>
     </v-card>
 </template> 
 
 <script>
-import { mapActions } from 'vuex'
-
+import EditCatDialog from './EditCatDialog'
+import DeleteCatDialog from './DeleteCatDialog'
 
 export default {
     name: "CatCard",
+    data: () => ({
+        dialogEdit: false,
+        dialogDelete: false
+    }),
+    components: {
+        EditCatDialog,
+        DeleteCatDialog
+    },
     props: {
         cat: Object,
         editable: Boolean,
-    },
-    methods: {
-        ...mapActions(['openDialog']),
     }
 }
 </script>
-
-<style>
-    .md-card {
-        margin-bottom: 1rem;
-    }
-</style>

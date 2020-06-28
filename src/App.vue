@@ -1,9 +1,6 @@
 <template>
     <v-app>
 
-      <MutationDialog />
-      <DeleteCatDialog />
-
       <v-app-bar app color="primary">
         <v-btn icon color="grey lighten-4" @click="goTo('Home')">
           <v-icon>home</v-icon>
@@ -12,9 +9,23 @@
         <v-btn icon color="grey lighten-4" @click="goTo('Edit')">
           <v-icon>edit</v-icon>
         </v-btn>
-        <v-btn icon color="grey lighten-4" v-if="$route.name == 'Edit'" @click="openDialog({type: 'addDialog', id: null})">
-          <v-icon>add</v-icon>
-        </v-btn>
+
+        <v-dialog v-model="dialog"
+                  max-width="600px"
+                  v-if="$route.name == 'Edit'"
+                  transition="fade-transition"
+                  @dialog-close="this.dialog = false">
+          <template v-slot:activator="{ on, attrs }">
+      
+          <v-btn icon
+                color="grey lighten-4"
+                v-bind="attrs"
+                v-on="on">
+            <v-icon>add</v-icon>
+          </v-btn>
+          </template>
+          <AddCatDialog :dialog="dialog" @add-dialog-close="dialog=false"/>
+        </v-dialog>
 
         <v-menu 
           :close-on-content-click="false"
@@ -56,29 +67,27 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import MutationDialog from './components/MutationDialog'
-import DeleteCatDialog from './components/DeleteCatDialog'
+import AddCatDialog from './components/AddCatDialog'
 import FilteredCats from './components/FilteredCats'
 
 export default {
   components: {
-    MutationDialog,
-    DeleteCatDialog,
+    AddCatDialog,
     FilteredCats
   },
   data: () => ({
+      dialog: false,
       // handling route matching for home and edit page
       pathRegExp: /\/.+?\//
   }),
   methods: {
-    ...mapActions(['fetchCats', 'openDialog']),
+    ...mapActions(['fetchCats']),
     goTo: function (path) {
       if (this.$route.name !== path) {
           this.$router.replace({
           name: path
         })
       }
-      
     }
   },
   created() {
@@ -117,7 +126,7 @@ export default {
   .pagenation-wrapper {
     display: flex;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-top: .5em;
   }
 
   .page-link {
