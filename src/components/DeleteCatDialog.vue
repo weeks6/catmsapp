@@ -1,34 +1,36 @@
 <template>
-  <md-dialog :md-active.sync="deleteDialog.active">
-      <md-dialog-title>Удалить котика?</md-dialog-title>
-
-      <md-dialog-actions>
-        <md-button class="md-primary" @click="closeDialog({type: 'deleteDialog', id: null})">Отмена</md-button>
-        <md-button class="md-accent" @click="submitDeletion">Удалить</md-button>
-        <md-progress-spinner v-if="loading" :md-diameter="30" :md-stroke="3" md-mode="indeterminate" class="md-accent"></md-progress-spinner>
-      </md-dialog-actions>
-    </md-dialog>
+  <v-card>
+    <v-card-title class="headline">Удалить котика?</v-card-title>
+    <v-card-text>Котик удаляется навсегда (очень долго)</v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="green darken-1" icon @click="$emit('delete-dialog-close')">
+        <v-icon>close</v-icon>
+      </v-btn>
+      <v-btn color="red" icon @click="removeCat">
+        <v-icon>done</v-icon>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
     name: "DeleteCatDialog",
-    data: () => ({
-      loading: false
-    }),
+    props: {
+      dialog: Boolean,
+      catId: String
+    },
     methods: {
-        ...mapActions(['deleteCat', 'closeDialog']),
-        submitDeletion() {
-            this.loading = true
-            this.deleteCat(this.deleteDialog.id).then(() => {
-              this.closeDialog({type: 'deleteDialog', id: null})
-              this.loading = false
+        ...mapActions(['deleteCat']),
+        removeCat() {
+            this.deleteCat(this.catId).then(() => {
+              this.$emit('delete-dialog-close')
             })
         }
-    },
-    computed: mapGetters(['deleteDialog']),
+    }
 }
 </script>
 
